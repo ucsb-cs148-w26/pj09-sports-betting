@@ -1,0 +1,1 @@
+Hey, my name is Ali. I'm a third year CS student with minors in Stats and Education. Excited to work on this project. I think for our prediction model, we should use play-by-play data of past games as training data and current play-by-play and time as a model input to get the win chance as an output.
