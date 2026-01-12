@@ -1,0 +1,1 @@
+Hi, my name is Raymond and I am a third-year CS student in UCSB. I am big into basketball whether it's playing it or watching it. I’m excited to work on this sports betting project that tracks live game probabilities. One project idea I’m interested in is collecting play-by-play data from past seasons to train a model and also show live in game stats.
