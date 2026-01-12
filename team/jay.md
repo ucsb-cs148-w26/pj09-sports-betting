@@ -1,0 +1,1 @@
+Hi, I'm Jay, a 2nd year CS major. I enjoy watching basketball and analyzing statistics of players for fantasy basketball. I envision this project to take into account score differential, time remaining, posession, team strengths / lineups, home court advantages, momentum, and more based on historical data to give an accurate prediction on win probability. 
