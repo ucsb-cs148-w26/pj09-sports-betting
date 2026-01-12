@@ -1,0 +1,1 @@
+Hi I'm Timothy Nguyen, I'm a fourth-year CS major taking CMPSC 184. I'm working on sports betting as our project and I want to implement betting statisitcs/odds for basketball winnings, or even likely player stats, so how many points/rebounds/assists a player would have in this upcooming game/matchup. 
