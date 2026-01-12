@@ -1,10 +1,10 @@
-Project: Sports Betting/
+Project: Sports Betting/Prediction
 
 Mentor: N/A
 
 Meeting Time: lect02
 
-Type of meeting: [spring planning, daily scrum]
+Type of meeting: [sprint planning, daily scrum]
 
 Team: Alvin Chan [x], Tim Nguyen [x], Jun Yoon[x], Rayomd Xie [x], Ali Shahid [x], Kevin Yang [x], Logan Melgoza [x], Jay Yeung [x]
 
