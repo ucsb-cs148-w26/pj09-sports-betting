@@ -1,0 +1,1 @@
+Hello, I'm a 3rd year CS major. I enjoy playing and watching basketball and I look forward to developing an app that predicts real-time win probability during NBA games. Some ideas I have include using the two teams' records using past data and individual player 2K overalls on each team to predict win probability.
