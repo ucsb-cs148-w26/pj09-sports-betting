@@ -17,4 +17,4 @@ npm run dev
 ```
 
 ## Live deployment
-[](https://cs148-helloworld-logan.vercel.app)
+[https://cs148-helloworld-logan.vercel.app](https://cs148-helloworld-logan.vercel.app)
