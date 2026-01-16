@@ -27,3 +27,4 @@ dist-ssr
 
 .env
 .DS_Store
+.vercel
