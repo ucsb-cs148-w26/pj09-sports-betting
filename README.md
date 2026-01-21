@@ -26,7 +26,7 @@ This project employs frontend with Next.js due to its ease of use and compatibil
 - scikit-learn
 
 #### Database
-- PostgresSQL
+- PostgreSQL
 - Redis
 
 ### User Roles
