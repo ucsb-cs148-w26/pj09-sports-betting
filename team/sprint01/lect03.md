@@ -1,6 +1,6 @@
 Project: Sports Betting/Prediction
  
-Mentor: Gen Tamada
+Mentor: James, Jonathan
 
 Meeting Time: lect03
 
