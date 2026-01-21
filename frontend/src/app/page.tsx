@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <p className="text-4xl font-bold">Hello, World!</p>
+      <p className="text-4xl font-bold">please no deploy</p>
     </div>
   );
 }
