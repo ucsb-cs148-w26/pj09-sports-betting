@@ -25,6 +25,10 @@ This project employs frontend with Next.js due to its ease of use and compatibil
 - Pandas + NumPy
 - scikit-learn
 
+#### Database
+- PostgresSQL
+- Redis
+
 ### User Roles
 
 #### NBA Fans and Sports Bettors
