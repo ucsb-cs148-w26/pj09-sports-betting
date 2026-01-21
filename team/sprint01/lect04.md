@@ -13,6 +13,8 @@ Team: Alvin Chan [x], Tim Nguyen [], Jun Yoon[x], Rayomd Xie [x], Ali Shahid [x]
 ### Sprint Goal
 
 - Deliver MVP: Have a home page containing a game card with stats for at least one live game
+- We want mocked stats for the players and games by the end using ML.
+- We are going to make a visually pleasing home page that displays stats effectively
 
 
 
