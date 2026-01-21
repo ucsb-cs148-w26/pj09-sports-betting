@@ -10,6 +10,12 @@ Type of meeting: [sprint planning, daily scrum]
 
 Team: Alvin Chan [x], Tim Nguyen [], Jun Yoon[x], Rayomd Xie [x], Ali Shahid [x], Kevin Yang [x], Logan Melgoza [x], Jay Yeung [x]
 
+### Sprint Goal
+
+- Deliver MVP: Have a home page containing a game card with stats for at least one live game
+
+
+
 Scribed Discussion:
 
 ### Junhyung
@@ -35,3 +41,6 @@ Worked on adding issues to the kanban board. Removed the old hello world. No blo
 
 ### Raymond
 Added the license.md and planning on working on finding a host for the backend.
+
+
+
