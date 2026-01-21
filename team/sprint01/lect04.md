@@ -1,5 +1,17 @@
 # 1/21/2026 Scrum
 
+Project: Sports Betting/Prediction
+
+Mentor: Gen Tamada
+
+Meeting Time: lect04 1/21/2026
+
+Type of meeting: [sprint planning, daily scrum]
+
+Team: Alvin Chan [x], Tim Nguyen [], Jun Yoon[x], Rayomd Xie [x], Ali Shahid [x], Kevin Yang [x], Logan Melgoza [x], Jay Yeung [x]
+
+Scribed Discussion:
+
 ### Junhyung
 Finished up learning.md, added some subissues for the backend onto the kanban board, working on setting up the PostGreSQL database for the app.
 
