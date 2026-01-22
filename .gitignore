@@ -170,4 +170,42 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-frontend/
+# =====================
+# Frontend (Next.js)
+# =====================
+
+# dependencies
+frontend/node_modules/
+frontend/.pnp
+frontend/.pnp.*
+frontend/.yarn/*
+!frontend/.yarn/patches
+!frontend/.yarn/plugins
+!frontend/.yarn/releases
+!frontend/.yarn/versions
+
+# testing
+frontend/coverage/
+
+# next.js
+frontend/.next/
+frontend/out/
+
+# production
+frontend/build/
+
+# env files
+frontend/.env*
+
+# vercel
+frontend/.vercel
+
+# typescript
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+
+# logs
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
