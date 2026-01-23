@@ -1,7 +1,7 @@
 # Date of Retrospective: 01/24/25
 
 * Led by: Tim Nguyen
-* Present: Tim Nguyen, Alvin Chan, Logan Melgoza, Raymond Xie, Ali Shadid, Junhyung Yoon, Jay Yueng
+* Present: Tim Nguyen, Alvin Chan, Logan Melgoza, Raymond Xie, Ali Shadid, Junhyung Yoon, Jay Yueng, Kevin Yang
 
 ## Action item
 
@@ -14,3 +14,4 @@
 * We used the stop continue stop strategy for our first retrospective. 
 * It went smoothly as it pointed out the majority fault that we needed to work on most as a team. 
 * To be able to communicate to all team members by reaching out for their inouts for start, stop, continue.
+
