@@ -1,7 +1,11 @@
 Project: Sports Betting/Prediction
-Mentor: Gen Tamada
+
+Mentor: James, Jonathan
+
 Meeting Time: Sec02
+
 Type of meeting: [sprint planning, daily scrum]
+
 Team: Alvin Chan [x], Tim Nguyen [x], Jun Yoon[x], Rayomd Xie [x], Ali Shahid [x], Kevin Yang [x], Logan Melgoza [x], Jay Yeung [x]
 
 Scribed Discussion:

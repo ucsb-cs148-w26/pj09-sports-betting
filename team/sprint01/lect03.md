@@ -1,6 +1,6 @@
 Project: Sports Betting/Prediction
  
-Mentor: Gen Tamada
+Mentor: James, Jonathan
 
 Meeting Time: lect03
 
@@ -8,7 +8,17 @@ Type of meeting: [sprint planning, daily scrum]
 
 Team: Alvin Chan [x], Tim Nguyen [x], Jun Yoon[x], Rayomd Xie [x], Ali Shahid [x], Kevin Yang [x], Logan Melgoza [x], Jay Yeung [x]
 
-Scribed Discussion:
+### Sprint Goal
+
+- Deliver MVP: Have a home page containing a game card with stats for at least one live game
+- We want mocked stats for the players and games by the end using ML.
+- We are going to make a visually pleasing home page that displays stats effectively
+
+
+
+
+
+### Scribed Discussion:
 
 Alvin Chan: Working on User stories + Frontend. No current roadblocks.
 

@@ -1,16 +1,14 @@
 Project: Sports Betting/Prediction
  
-Mentor: Gen Tamada
+Mentor: James, Jonathan
 
 Meeting Time: lect02
 
-Type of meeting: [sprint planning, daily scrum]
+Type of meeting: [daily scrum]
 
 Team: Alvin Chan [x], Tim Nguyen [x], Jun Yoon[x], Rayomd Xie [x], Ali Shahid [x], Kevin Yang [x], Logan Melgoza [x], Jay Yeung [x]
 
 Scribed Discussion:
-
-Tobias updated lect02 agenda. Next tasks: h02 is in discussion by the teaching team on Gradescope, prepare Lab02, settle OHs. No current roadblocks
 
 Alvin Chan: Commited my individual name.md and NORMS.md. Working on the user journey. Have no blockers.
 

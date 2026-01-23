@@ -22,6 +22,10 @@ These are some of the most common Data & Modeling frameworks and everyone who is
 
 Same experience as Pandas and NumPy
 
+#### Render and Vercel
+
+Render is the hosting server that we will use for our backend which is able to easily support our tech stack. Vercel is also an easy way to host the frontend. We are all not too familiar with Render but we plan on learning it because it fits our tech stack so well.
+
 ### Skills to Learn (Summary)
 
 After going through all of the tools, the frontend team had a pretty good knowledge of all of the tools and frameworks that they had to use. Both Next.js and TailwindCSS are quite commonly used together and in terms of frontend development, the only learning to do was just refining skills within Next.js and TailwindCSS.
