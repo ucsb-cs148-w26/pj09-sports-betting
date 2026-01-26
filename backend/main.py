@@ -126,7 +126,8 @@ def stats():
     return {"Home score": "125"}
 
 
-@app.get("/games")
+# Live Games Route
+@app.get("/api/games")
 def games():
     """
     Returns current games and win probabilities (from in-memory store).
