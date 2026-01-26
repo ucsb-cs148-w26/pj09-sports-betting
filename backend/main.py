@@ -19,7 +19,7 @@ def stats():
     return{"Home score": "125"}
 
 # Live Games Route
-@app.get("/games")
+@app.get("/api/games")
 def games():
     """
     Returns a list of todays NBA Games
