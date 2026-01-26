@@ -16,6 +16,23 @@ export function useGameData() {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectAttemptsRef = useRef(0);
 
+  const fetchGames = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/api/games");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      console.log("Fetched games:", data);
+      setGames(Array.isArray(data) ? data : (data?.games ?? []));
+    } catch (e) {
+      console.error("Fetch games failed:", e);
+      setError("Failed to fetch games");
+    }
+  };
+
+  useEffect(() => {
+    fetchGames();
+  }, []);
+
   const connect = () => {
     try {
       setStatus("connecting");
