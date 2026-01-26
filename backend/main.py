@@ -11,7 +11,6 @@ from nba_api.live.nba.endpoints import scoreboard
 from probabilities import compute_win_probabilities
 import state as app_state
 
-
 def fetch_games_from_nba() -> list[dict[str, Any]]:
     """Sync: fetch scoreboard, transform to our game shape. Uses mock when no games."""
     raw = scoreboard.ScoreBoard().get_dict()
@@ -75,6 +74,7 @@ async def update_games_and_probabilities():
     app_state.probabilities.update(probabilities)
     
     result = merge_gp(games, probabilities)
+    print(f"Broadcasting {len(result)} games to {len(manager.active_connections)} clients\n")
     await manager.broadcast_json(result)
 
 async def poll_loop():
@@ -100,7 +100,7 @@ class ConnectionManager:
         if websocket in self.active_connections:
             self.active_connections.remove(websocket)
 
-    async def broadcast_json(self, payload: dict[str, Any]):
+    async def broadcast_json(self, payload: Any):
         txt = json.dumps(payload)
         for c in self.active_connections:
             try:
@@ -110,6 +110,21 @@ class ConnectionManager:
 
 
 manager = ConnectionManager()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan for the FastAPI app."""
+    poll_task = asyncio.create_task(poll_loop())
+    try:
+        yield
+    finally:
+        poll_task.cancel()
+        try:
+            await poll_task
+        except asyncio.CancelledError:
+            pass
+
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 def read_root():
