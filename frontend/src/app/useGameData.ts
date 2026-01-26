@@ -1,32 +1,32 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useRef } from 'react';
-import type { Game, ConnectionStatus } from './types';
+import { useEffect, useState, useRef } from "react";
+import type { Game, ConnectionStatus } from "./types";
 
-const WS_URL = 'ws://localhost:8000/ws';
+const WS_URL = "ws://localhost:8000/ws";
 const RECONNECT_INTERVAL = 5000; // 5 second interval
 const MAX_RECONNECT_ATTEMPTS = 10;
 
 export function useGameData() {
   const [games, setGames] = useState<Game[]>([]);
-  const [status, setStatus] = useState<ConnectionStatus>('connecting');
+  const [status, setStatus] = useState<ConnectionStatus>("connecting");
   const [error, setError] = useState<string | null>(null);
-  
+
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectAttemptsRef = useRef(0);
 
   const connect = () => {
     try {
-      setStatus('connecting');
+      setStatus("connecting");
       setError(null);
-      
+
       const ws = new WebSocket(WS_URL);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log('WebSocket connected');
-        setStatus('connected');
+        console.log("WebSocket connected");
+        setStatus("connected");
         setError(null);
         reconnectAttemptsRef.current = 0;
       };
@@ -36,37 +36,41 @@ export function useGameData() {
           const data = JSON.parse(event.data);
           setGames(data);
         } catch (err) {
-          console.error('Failed to parse game data:', err);
-          setError('Failed to parse game data');
+          console.error("Failed to parse game data:", err);
+          setError("Failed to parse game data");
         }
       };
 
       ws.onerror = (event) => {
-        console.error('WebSocket error:', event);
-        setStatus('error');
-        setError('WebSocket connection error');
+        console.error("WebSocket error:", event);
+        setStatus("error");
+        setError("WebSocket connection error");
       };
 
       ws.onclose = () => {
-        console.log('WebSocket disconnected');
-        setStatus('disconnected');
-        
+        console.log("WebSocket disconnected");
+        setStatus("disconnected");
+
         // Attempt to reconnect
         if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
           reconnectAttemptsRef.current += 1;
-          console.log(`Reconnecting... (attempt ${reconnectAttemptsRef.current})`);
-          
+          console.log(
+            `Reconnecting... (attempt ${reconnectAttemptsRef.current})`,
+          );
+
           reconnectTimeoutRef.current = setTimeout(() => {
             connect();
           }, RECONNECT_INTERVAL);
         } else {
-          setError('Max reconnection attempts reached. Backend may not be ready.');
+          setError(
+            "Max reconnection attempts reached. Backend may not be ready.",
+          );
         }
       };
     } catch (err) {
-      console.error('Failed to create WebSocket:', err);
-      setStatus('error');
-      setError('Failed to create WebSocket connection');
+      console.error("Failed to create WebSocket:", err);
+      setStatus("error");
+      setError("Failed to create WebSocket connection");
     }
   };
 
