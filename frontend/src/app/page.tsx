@@ -19,13 +19,16 @@ export default function Home() {
               {game.home_team} {game.home_score} - {game.away_score}{" "}
               {game.away_team}
             </h1>
-            <h2>
+            <h2>Record:</h2>
+            <p>
               {game.home_record} - {game.away_record}
-            </h2>
-            <h2>
+            </p>
+            <h2>Win Prob:</h2>
+            <p>
               {game.home_win_prob} - {game.away_win_prob}
-            </h2>
-            <span>{game.status}</span>
+            </p>
+            <h2>Status</h2>
+            <p>{game.status}</p>
           </div>
         ),
       )}
