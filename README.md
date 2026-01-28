@@ -4,6 +4,8 @@
 
 Our app is designed to provide live win probability modeling and player performance projections for daily NBA Matchups. The system ingests live NBA game data and runs predictive models to broadcast live odds updates to all users in real time. Anyone from sports bettors to casual fans are able to perform pre-game analysis and monitor probabilities throughout each game. This design is meant to provide a clear and interactive view of probabilities and statistics in one clean dashboard.
 
+Access the website at https://pj09-sports-betting.vercel.app/
+
 ## Audience
 
 Our ideal users are casual NBA fans and sports bettors who want a real-time view of matchup odds and player performance projections.
@@ -13,17 +15,21 @@ Our ideal users are casual NBA fans and sports bettors who want a real-time view
 This project employs frontend with Next.js due to its ease of use and compatibility with common backend services, routing, and Vercel for deployment. For our backend, we decided to use FastAPI because of its built-in support for WebSockets, which would allow real-time retrieval of game state updates to update live probabilities.
 
 #### Frontend
+
 - Next.js (React, TypeScript)
 - Tailwind CSS
 
 #### Backend
+
 - FastAPI (Python)
 
 #### Data & Modeling
+
 - Pandas + NumPy
 - scikit-learn
 
 #### Database
+
 - PostgreSQL
 - Redis
 
@@ -37,13 +43,13 @@ The next user role would be sports bettors. They would have a similar role to yo
 
 ## Group Members
 
-| Name            | GitHub ID       |
-|-----------------|-----------------|
-| Logan Melgoza   | @logan-melgoza  | 
-| Raymond Xie     | @POWERTRICEPS   |
-| Ali Shahid      | @Mala-Patke     |
-| Kevin Yang      | @lem0000ns      |
-| Timothy Nguyen | @timmywin      |
+| Name           | GitHub ID       |
+| -------------- | --------------- |
+| Logan Melgoza  | @logan-melgoza  |
+| Raymond Xie    | @POWERTRICEPS   |
+| Ali Shahid     | @Mala-Patke     |
+| Kevin Yang     | @lem0000ns      |
+| Timothy Nguyen | @timmywin       |
 | Alvin Chan     | @alvinlovescode |
-| Junhyung Yoon   | @Neamal        |
+| Junhyung Yoon  | @Neamal         |
 | Jay Yeung      | @JayYeung5      |
