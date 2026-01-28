@@ -1,38 +1,20 @@
-"use client";
+import GameCard from "./games/GameCard";
+import { mockGames } from "./games/mock";
 
-import { useGameData } from "./useGameData";
-
-export default function Home() {
-  const { games, status, error, reconnect } = useGameData();
-
+export default function GamesPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center gap-6 bg-blue-975 text-white font-sans">
-      {games.map(
-        (
-          game, //TODO: REPLACE WITH GAME CARD COMPONENT
-        ) => (
-          <div
-            key={game.game_id}
-            className="game-card a1 rounded-lg border border-zinc-200 dark:border-zinc-800 p-4"
-          >
-            <h1>
-              {game.home_team} {game.home_score} - {game.away_score}{" "}
-              {game.away_team}
-            </h1>
-            <h2>Record:</h2>
-            <p>
-              {game.home_record} - {game.away_record}
-            </p>
-            <h2>Win Prob:</h2>
-            <p>
-              {game.home_win_prob} - {game.away_win_prob}
-            </p>
-            <h2>Status</h2>
-            <p>{game.status}</p>
-          </div>
-        ),
-      )}
-    </div>
+    <main className="min-h-screen bg-zinc-50 p-6 pt-20">
+      <div className="mx-auto max-w-4xl">
+        <h1 className="text-2xl font-semibold text-emerald-400">Live Games</h1>
+        <p className="mt-1 text-zinc-600">Check out today's games and predictions</p>
+
+        <div className="mt-6 grid gap-6">
+          {mockGames.map((game) => (
+            <GameCard key={game.game_id} data={game} />
+          ))}
+        </div>
+      </div>
+    </main>
   );
 }
 /* <div className="">
