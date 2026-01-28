@@ -10,9 +10,9 @@ Type of meeting: [daily scrum]
 
 Team: Alvin Chan [], Tim Nguyen [x], Jun Yoon[], Rayomd Xie [x], Ali Shahid [x], Kevin Yang [x], Logan Melgoza [x], Jay Yeung [x]
 
-###  Scribed Discussion:
+### Scribed Discussion:
 
-Junhyung: Absent
+Junhyung: Sick
 
 Kevin: Created backend directory and intial FastAPI app, working on setting up backend socket, no blockers
 
