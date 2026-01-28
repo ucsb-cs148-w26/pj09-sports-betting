@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from nba_api.live.nba.endpoints import scoreboard
+from nba_api.stats.endpoints import leaguestandings
 from mock_data import MOCK_GAMES
+from standings import normalize_league_standings
 
 app = FastAPI()
 
@@ -64,3 +66,28 @@ def games():
         result = MOCK_GAMES
     
     return result
+
+# Standings route
+@app.get("/api/standings")
+def standings():
+    """
+    Retrieve current NBA league standings grouped by conference.
+
+    This endpoint fetches the latest NBA league standings using the
+    `nba_api` statistics endpoint, normalizes the raw response data,
+    and returns structured standings for both the Eastern and Western
+    Conferences.
+
+    The response includes team rankings, records, win percentages,
+    recent performance, and current streak information, and is intended
+    to be consumed by frontend components displaying standings tables.
+
+    Returns:
+        List[Dict]: A list containing a single dictionary with:
+            - "east_standings" (List[Dict]): Eastern Conference standings
+            - "west_standings" (List[Dict]): Western Conference standings
+    """
+    response = leaguestandings.LeagueStandings()
+    data = response.get_dict()
+    normalized_standings = normalize_league_standings(data)
+    return normalized_standings
