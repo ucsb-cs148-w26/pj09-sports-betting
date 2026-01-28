@@ -1,7 +1,13 @@
+"use client";
+
 import GameCard from "./games/GameCard";
 import { mockGames } from "./games/mock";
+import { useGameData } from "./useGameData";
 
 export default function GamesPage() {
+  const { games, status, error } = useGameData();
+  const displayGames = games.length ? games : mockGames;
+
   return (
     <main className="min-h-screen bg-zinc-50 p-6 pt-20">
       <div className="mx-auto max-w-4xl">
@@ -9,9 +15,13 @@ export default function GamesPage() {
         <p className="mt-1 text-zinc-600">Check out today's games and predictions</p>
 
         <div className="mt-6 grid gap-6">
-          {mockGames.map((game) => (
+          {displayGames.map((game) => (
             <GameCard key={game.game_id} data={game} />
           ))}
+        </div>
+        <div className="mt-6 text-sm text-zinc-500">
+          Status: {status}
+          {error ? ` • ${error}` : null}
         </div>
       </div>
     </main>
