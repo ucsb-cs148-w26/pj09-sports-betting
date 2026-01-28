@@ -1,22 +1,20 @@
-export default function Home() {  
+import GameCard from "./games/GameCard";
+import { mockGames } from "./games/mock"
 
-  let games : Array<{ id: number; home: string; away: string; hscore: number; ascore: number; time: string }> = [
-    { id: 1, home: "T1", away: "T2", hscore: 75, ascore: 80, time: "Q4 02:15" },
-    { id: 2, home: "T3", away: "T4", hscore: 90, ascore: 85, time: "Q4 02:15" },
-    { id: 3, home: "T5", away: "T6", hscore: 60, ascore: 70, time: "Q4 02:15" },
-  ]; 
-  //TODO: GET GAME DATA FROM BACKEND
-  //TODO: CONNECT SOCKET AND LIVE UPDATE WITH STATE HOOK
-
+export default function GamesPage() {
   return (
-  <div className="flex min-h-screen items-center justify-center gap-6 bg-blue-975 text-white font-sans">
-      {games.map((game) => ( //TODO: REPLACE WITH GAME CARD COMPONENT
-        <div key={game.id} className="game-card a1 rounded-lg border border-zinc-200 dark:border-zinc-800 p-4">
-          <h1>{game.home} {game.hscore} - {game.ascore} {game.away}</h1>
-          <span>{game.time}</span>
+    <main className="min-h-screen bg-zinc-50 p-6 pt-20">
+      <div className="mx-auto max-w-4xl">
+        <h1 className="text-2xl font-semibold text-emerald-400">Live Games</h1>
+        <p className="mt-1 text-zinc-600">Check out today's games and predictions</p>
+
+        <div className="mt-6 grid gap-6">
+          {mockGames.map((game) => (
+            <GameCard key={game.game_id} data={game} />
+          ))}
         </div>
-      ))}
-    </div>
+      </div>
+    </main>
   );
 }
 
