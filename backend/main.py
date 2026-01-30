@@ -1,8 +1,19 @@
 from fastapi import FastAPI
 from nba_api.live.nba.endpoints import scoreboard
 from mock_data import MOCK_GAMES
+from fastapi.middleware.cors import CORSMiddleware
+import random
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def read_root():
@@ -33,6 +44,9 @@ def games():
     - home_record: Home team record (w-l)
     - away_record: Away team record (w-l)
     - status: Current game status
+    - quarter: Current quarter
+    - clock - Time remaining on the quarter
+    - hitChance - Team 1's chance of winning
 
     If there are no live games, there is mock data that is sent when the api is called
     """
@@ -57,6 +71,9 @@ def games():
                 "home_record": f'{home["wins"]}-{home["losses"]}',
                 "away_record": f'{away["wins"]}-{away["losses"]}',
                 "status": game["gameStatusText"],
+                "quarter": game.get("period"),
+                "clock": game.get("gameClock"),
+                "hitChance": random.uniform(0, 1),  # Placeholder for hit chance
             }
         )
 
