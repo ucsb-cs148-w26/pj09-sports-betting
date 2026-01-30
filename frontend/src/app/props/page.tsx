@@ -9,7 +9,7 @@ export default function PropsPage() {
         <p className="mt-1 text-zinc-600"></p>
 
         <div className="mt-6">
-          <PlayerPropCard data={mockProp} />
+          <PlayerPropCard data={mockProp} /> 
         </div>
       </div>
     </main>

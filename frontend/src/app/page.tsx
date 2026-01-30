@@ -1,7 +1,18 @@
-import GameCard from "./games/GameCard";
-import { mockGames } from "./games/mock"
+"use client";
+
+import GameCard, { type Game } from "./games/GameCard";
+import { useEffect, useState } from "react";
 
 export default function GamesPage() {
+  const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    fetch("http://localhost:8000/api/games")
+      .then((res) => res.json())
+      .then((data) => setGames(data))
+      .catch(() => setGames([]))
+      .finally(() => setLoading(false));
+  }, []);
   return (
     <main className="min-h-screen bg-zinc-50 p-6 pt-20">
       <div className="mx-auto max-w-4xl">
@@ -9,7 +20,8 @@ export default function GamesPage() {
         <p className="mt-1 text-zinc-600">Check out today's games and predictions</p>
 
         <div className="mt-6 grid gap-6">
-          {mockGames.map((game) => (
+        {!loading &&
+          games.map((game) => (
             <GameCard key={game.game_id} data={game} />
           ))}
         </div>
