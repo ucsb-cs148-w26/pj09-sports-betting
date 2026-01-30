@@ -15,15 +15,17 @@ export default function GamesPage() {
   }, []);
   return (
     <main className="min-h-screen bg-zinc-50 p-6 pt-20">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-7xl">
         <h1 className="text-2xl font-semibold text-emerald-400">Live Games</h1>
         <p className="mt-1 text-zinc-600">Check out today's games and predictions</p>
 
-        <div className="mt-6 grid gap-6">
-        {!loading &&
-          games.map((game) => (
-            <GameCard key={game.game_id} data={game} />
-          ))}
+        <div className="mt-6 grid grid-cols-3 gap-6">
+        <div className="col-span-2 grid grid-cols-2 gap-6">
+          {!loading &&
+            games.map((game) => (
+              <GameCard key={game.game_id} data={game} />
+            ))}
+        </div>
         </div>
       </div>
     </main>
