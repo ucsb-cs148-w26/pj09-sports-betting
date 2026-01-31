@@ -12,7 +12,9 @@ export default function GamesPage() {
     <main className="min-h-screen bg-zinc-50 p-6 pt-20">
       <div className="mx-auto max-w-4xl">
         <h1 className="text-2xl font-semibold text-emerald-400">Live Games</h1>
-        <p className="mt-1 text-zinc-600">Check out today's games and predictions</p>
+        <p className="mt-1 text-zinc-600">
+          Check out today&apos;s games and predictions
+        </p>
 
         <div className="mt-6 grid gap-6">
           {displayGames.map((game) => (
