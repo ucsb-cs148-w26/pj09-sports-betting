@@ -46,7 +46,7 @@ export default function GameCard({ data }: { data: Game }) {
         <div className="flex justify-between items-center">
           <span className="text-gray-700 font-medium">Win Prob:</span>
           <span className="font-bold text-lg text-green-600">
-            {formatProb(data.home_win_prob)} / {formatProb(data.away_win_prob)}
+            {formatProb(data.home_win_prob ?? null)} / {formatProb(data.away_win_prob ?? null)}
           </span>
         </div>
       </div>
