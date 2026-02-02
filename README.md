@@ -64,9 +64,10 @@ Before setting up the project, make sure you have the following installed:
 - **Python 3.10+** (recommended for FastAPI and `nba_api`)
 - **Node.js 18+** and **npm** (for the Next.js frontend)
 - **pip** (comes with Python)
-- *(Optional)* Python’s built-in `venv` for virtual environments
+- _(Optional)_ Python’s built-in `venv` for virtual environments
 
 You can verify installations with:
+
 ```bash
 git --version
 python3 --version
@@ -77,13 +78,16 @@ npm --version
 ## Dependencies
 
 ### Backend (Python / FastAPI)
+
 - **FastAPI** – backend web framework
 - **Uvicorn** – ASGI server for running FastAPI
-- **nba_api** – used to fetch NBA data (standings, games, etc.)
+- **Public ESPN API** – used to fetch NBA data (standings, games, etc.)
 - **uvloop** – faster event loop (optional, used by Uvicorn)
 - **pydantic** – data validation and serialization
+- **PostgreSQL** - historical game data storage
 
 ### Frontend (Next.js)
+
 - **Next.js** – React framework for frontend
 - **React** – UI library
 - **TypeScript** – type safety and better developer experience
@@ -94,12 +98,14 @@ All frontend dependencies are listed in `frontend/package.json`.
 ## Installation Steps
 
 ### 1. Clone the repository
+
 ```bash
 git clone <your-repo-url>
 cd pj09-sports-betting
 ```
 
 ### 2. Backend setup
+
 ```bash
 cd backend
 python3 -m venv venv
@@ -110,11 +116,13 @@ pip install -r requirements.txt
 ```
 
 Run the backend server:
+
 ```bash
 uvicorn main:app --reload
 ```
 
 The backend will be available at:
+
 ```
 http://localhost:8000
 ```
@@ -122,6 +130,7 @@ http://localhost:8000
 ### 3. Frontend setup
 
 In a new terminal:
+
 ```bash
 cd frontend
 npm install
@@ -129,6 +138,7 @@ npm run dev
 ```
 
 The frontend will be available at:
+
 ```
 http://localhost:3000
 ```
@@ -148,6 +158,7 @@ This application provides real-time and near–real-time NBA analytics, includin
   - Player over/under probability projections
 
 Typical usage flow:
+
 1. Start backend and frontend servers
 2. Navigate to the frontend dashboard
 3. View standings, live games, and evolving game data in one place
@@ -161,6 +172,7 @@ Typical usage flow:
   Some NBA API calls are synchronous and may briefly block the event loop during fetches.
 
 If something breaks, check:
+
 - `backend/main.py`
 - `backend/services/`
 - Network requests to `nba_api`
@@ -170,16 +182,19 @@ If something breaks, check:
 Fork it!
 
 Create your feature branch:
+
 ```bash
 git checkout -b my-new-feature
 ```
 
 Commit your changes:
+
 ```bash
 git commit -am "Add some feature"
 ```
 
 Push to the branch:
+
 ```bash
 git push origin my-new-feature
 ```
