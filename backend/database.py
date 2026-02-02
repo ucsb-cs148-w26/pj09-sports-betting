@@ -6,13 +6,31 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DB_CONFIG = {
-    'host': os.getenv('DB_HOST', 'localhost'),
-    'port': os.getenv('DB_PORT', '5432'),
-    'database': os.getenv('DB_NAME', 'sports_betting'),
-    'user': os.getenv('DB_USER', 'postgres'),
-    'password': os.getenv('DB_PASSWORD', 'postgres')
-}
+# Render database config
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+if DATABASE_URL:
+    from urllib.parse import urlparse
+    
+    result = urlparse(DATABASE_URL)
+    DB_CONFIG = {
+        'host': result.hostname,
+        'port': result.port or 5432,
+        'database': result.path[1:],  
+        'user': result.username,
+        'password': result.password
+    }
+    print(f"Using Render database: {result.hostname}")
+else:
+    # local database env variables
+    DB_CONFIG = {
+        'host': os.getenv('DB_HOST', 'localhost'),
+        'port': os.getenv('DB_PORT', '5432'),
+        'database': os.getenv('DB_NAME', 'sports_betting'),
+        'user': os.getenv('DB_USER', 'junhyungyoon'),
+        'password': os.getenv('DB_PASSWORD', '')
+    }
+    print(f"💻 Using local database: {DB_CONFIG['host']}")
 
 def get_db_connection():
     """Creates database connection"""
