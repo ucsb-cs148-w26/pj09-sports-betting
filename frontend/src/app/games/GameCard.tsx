@@ -1,9 +1,13 @@
-import type { Game } from "../types";
+import { Game } from '../types';
+import abbr from './abbrMap';
+import Image from 'next/image';
 
 function formatProb(n: number | null) {
   if (n === null || Number.isNaN(n)) return "N/A";
   return `${Math.round(n)}%`;
 }
+
+const imgSize = 100;
 
 export default function GameCard({ data }: { data: Game }) {
   return (
@@ -17,6 +21,15 @@ export default function GameCard({ data }: { data: Game }) {
       <div className="flex justify-between items-center mb-4">
         {/* Team 1 */}
         <div className="flex-1 text-center">
+          <div className="flex-1 justify-center mb-2">
+            <Image
+              src={`https://a1.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/scoreboard/${abbr[data.home_team]}.png&h=456&w=456`}
+              alt={`${data.home_team} logo`}
+              width={imgSize}
+              height={imgSize}
+              className="mx-auto"
+            />
+          </div>
           <h3 className="font-bold text-lg">{data.home_team}</h3>
           <p className="text-sm text-gray-600">
             {data.home_wins}-{data.home_losses}
@@ -31,6 +44,14 @@ export default function GameCard({ data }: { data: Game }) {
 
         {/* Team 2 */}
         <div className="flex-1 text-center">
+            <Image
+              src={`https://a1.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/scoreboard/${abbr[data.away_team]}.png&h=456&w=456`}
+              alt={`${data.away_team} logo`}
+              width={imgSize}
+              height={imgSize}
+              className="mx-auto"
+            />
+
           <h3 className="font-bold text-lg">{data.away_team}</h3>
           <p className="text-sm text-gray-600">
             {data.away_wins}-{data.away_losses}
