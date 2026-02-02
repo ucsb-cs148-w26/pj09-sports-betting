@@ -175,7 +175,7 @@ If something breaks, check:
 
 - `backend/main.py`
 - `backend/services/`
-- Network requests to `nba_api`
+- Network requests to ESPN API
 
 # Contributing
 
