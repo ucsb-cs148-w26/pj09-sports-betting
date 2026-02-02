@@ -1,4 +1,4 @@
-export default {
+const abbr : Record<string, string> = {
     ATL: "Hawks",
     "Hawks": "ATL",
     BOS: "Celtics",
@@ -60,3 +60,5 @@ export default {
     WAS: "Wizards",
     "Wizards": "WAS",
 }
+
+export default abbr;
