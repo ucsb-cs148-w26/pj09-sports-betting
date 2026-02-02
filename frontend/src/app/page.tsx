@@ -10,15 +10,29 @@ export default function GamesPage() {
 
   return (
     <main className="min-h-screen bg-zinc-50 p-6 pt-20">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-7xl">
         <h1 className="text-2xl font-semibold text-emerald-400">Live Games</h1>
-        <p className="mt-1 text-zinc-600">Check out today's games and predictions</p>
+        <p className="mt-1 text-zinc-600">
+          Check out today&apos;s games and predictions
+        </p>
 
-        <div className="mt-6 grid gap-6">
-          {displayGames.map((game) => (
-            <GameCard key={game.game_id} data={game} />
-          ))}
+        <div className="mt-6 grid grid-cols-6 gap-24">
+          {/* LEFT: Game cards (5/7) */}
+          <div className="col-span-4 grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {displayGames.map((game) => (
+              <GameCard key={game.game_id} data={game} />
+            ))}
+          </div>
+
+          {/* RIGHT: NBA Standings (2/7) */}
+          <div className="col-span-2">
+            <div className="rounded-xl border border-zinc-200 bg-white p-6">
+              <h2 className="text-xl font-semibold text-zinc-900">NBA Standings</h2>
+              <div className="mt-4 min-h-[600px] rounded-lg border border-dashed border-zinc-300" />
+            </div>
+          </div>
         </div>
+
         <div className="mt-6 text-sm text-zinc-500">
           Status: {status}
           {error ? ` • ${error}` : null}

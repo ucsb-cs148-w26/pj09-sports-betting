@@ -10,9 +10,6 @@ function formatProb(n: number | null) {
 const imgSize = 100;
 
 export default function GameCard({ data }: { data: Game }) {
-  const homeProb = formatProb(data.home_win_prob);
-  const awayProb = formatProb(data.away_win_prob);
-
   return (
     <div className="border border-gray-300 rounded-lg p-6 bg-white shadow-md hover:shadow-lg transition-shadow">
       {/* Status / Time Remaining */}
@@ -34,7 +31,9 @@ export default function GameCard({ data }: { data: Game }) {
             />
           </div>
           <h3 className="font-bold text-lg">{data.home_team}</h3>
-          <p className="text-sm text-gray-600">{data.home_record}</p>
+          <p className="text-sm text-gray-600">
+            {data.home_wins}-{data.home_losses}
+          </p>
           <p className="text-3xl font-bold text-blue-600 mt-2">
             {data.home_score}
           </p>
@@ -54,7 +53,9 @@ export default function GameCard({ data }: { data: Game }) {
             />
 
           <h3 className="font-bold text-lg">{data.away_team}</h3>
-          <p className="text-sm text-gray-600">{data.away_record}</p>
+          <p className="text-sm text-gray-600">
+            {data.away_wins}-{data.away_losses}
+          </p>
           <p className="text-3xl font-bold text-red-600 mt-2">
             {data.away_score}
           </p>
@@ -66,7 +67,7 @@ export default function GameCard({ data }: { data: Game }) {
         <div className="flex justify-between items-center">
           <span className="text-gray-700 font-medium">Win Prob:</span>
           <span className="font-bold text-lg text-green-600">
-            {homeProb} / {awayProb}
+            {formatProb(data.home_win_prob ?? null)} / {formatProb(data.away_win_prob ?? null)}
           </span>
         </div>
       </div>

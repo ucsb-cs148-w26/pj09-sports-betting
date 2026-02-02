@@ -53,3 +53,154 @@ The next user role would be sports bettors. They would have a similar role to yo
 | Alvin Chan     | @alvinlovescode |
 | Junhyung Yoon  | @Neamal         |
 | Jay Yeung      | @JayYeung5      |
+
+# Installation
+
+## Prerequisites
+
+Before setting up the project, make sure you have the following installed:
+
+- **Git** (for cloning the repository)
+- **Python 3.10+** (recommended for FastAPI and `nba_api`)
+- **Node.js 18+** and **npm** (for the Next.js frontend)
+- **pip** (comes with Python)
+- _(Optional)_ Python’s built-in `venv` for virtual environments
+
+You can verify installations with:
+
+```bash
+git --version
+python3 --version
+node --version
+npm --version
+```
+
+## Dependencies
+
+### Backend (Python / FastAPI)
+
+- **FastAPI** – backend web framework
+- **Uvicorn** – ASGI server for running FastAPI
+- **Public ESPN API** – used to fetch NBA data (standings, games, etc.)
+- **uvloop** – faster event loop (optional, used by Uvicorn)
+- **pydantic** – data validation and serialization
+- **PostgreSQL** - historical game data storage
+
+### Frontend (Next.js)
+
+- **Next.js** – React framework for frontend
+- **React** – UI library
+- **TypeScript** – type safety and better developer experience
+
+All backend dependencies are listed in `backend/requirements.txt`.  
+All frontend dependencies are listed in `frontend/package.json`.
+
+## Installation Steps
+
+### 1. Clone the repository
+
+```bash
+git clone <your-repo-url>
+cd pj09-sports-betting
+```
+
+### 2. Backend setup
+
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate   # macOS / Linux
+# venv\Scripts\Activate    # Windows
+
+pip install -r requirements.txt
+```
+
+Run the backend server:
+
+```bash
+uvicorn main:app --reload
+```
+
+The backend will be available at:
+
+```
+http://localhost:8000
+```
+
+### 3. Frontend setup
+
+In a new terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend will be available at:
+
+```
+http://localhost:3000
+```
+
+# Functionality
+
+This application provides real-time and near–real-time NBA analytics, including:
+
+- **League Standings**
+  - View current Eastern and Western Conference standings
+  - Teams are ordered by conference rank
+- **Live Games**
+  - View active NBA games and scores
+  - Backend polls NBA live data and broadcasts updates
+- **(Planned) Win Probability & Player Props**
+  - Live win probability modeling
+  - Player over/under probability projections
+
+Typical usage flow:
+
+1. Start backend and frontend servers
+2. Navigate to the frontend dashboard
+3. View standings, live games, and evolving game data in one place
+
+# Known Problems
+
+- **Win Probability Modeling**  
+  Win probability is not currently implemented and the numbers shown are generated randomly.
+
+- **Blocking NBA API calls**  
+  Some NBA API calls are synchronous and may briefly block the event loop during fetches.
+
+If something breaks, check:
+
+- `backend/main.py`
+- `backend/services/`
+- Network requests to ESPN API
+
+# Contributing
+
+Fork it!
+
+Create your feature branch:
+
+```bash
+git checkout -b my-new-feature
+```
+
+Commit your changes:
+
+```bash
+git commit -am "Add some feature"
+```
+
+Push to the branch:
+
+```bash
+git push origin my-new-feature
+```
+
+Submit a pull request 🎉
+
+# License
+
+This project is licensed under the **MIT License**.

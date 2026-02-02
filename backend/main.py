@@ -6,66 +6,28 @@ from typing import Any
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
-from mock_data import MOCK_GAMES
-from nba_api.live.nba.endpoints import scoreboard
-from nba_api.stats.endpoints import leaguestandings
+from datetime import date
 
-from probabilities import compute_win_probabilities
+import requests
+
+from nba_api.stats.endpoints import leaguestandings, scoreboardv2
+
+from util import compute_win_probabilities, parse_game_data, merge_gp
 import state as app_state
 
 from standings import normalize_league_standings
 
 def fetch_games_from_nba() -> list[dict[str, Any]]:
-    """Sync: fetch scoreboard, transform to our game shape. Uses mock when no games."""
-    raw = scoreboard.ScoreBoard().get_dict()
-    games = raw.get("scoreboard", {}).get("games", [])
+    url = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard"
+    resp = requests.get(url, timeout=10)
+    resp.raise_for_status()
+    raw = resp.json()
+    events = raw.get("events", [])
     result = []
-    for g in games:
-        home = g["homeTeam"]
-        away = g["awayTeam"]
-        result.append({
-            "game_id": g["gameId"],
-            "home_team": home["teamName"],
-            "away_team": away["teamName"],
-            "home_score": home["score"],
-            "away_score": away["score"],
-            "home_record": f'{home["wins"]}-{home["losses"]}',
-            "away_record": f'{away["wins"]}-{away["losses"]}',
-            "status": g["gameStatusText"],
-        })
-    if not result:
-        result = MOCK_GAMES
-    return result
-
-def merge_gp(g: list[dict[str, Any]], p: dict[str, dict[str, float]]) -> list[dict[str, Any]]:
-    """
-    Merge games and probabilities into a single list of dictionaries.
-
-    Structured output:
-    [
-        {
-            "game_id": "game-123",
-            "home_team": "Lakers",
-            "away_team": "Warriors",
-            "home_score": 123,
-            "away_score": 123,
-            "home_record": "28-16",
-            "away_record": "26-18",
-            "status": "Final",
-            "home_win_prob": 0.6,
-            "away_win_prob": 0.4,
-        },
-        ...
-    ]
-    """
-    result = []
-    for game in g:
-        game_id = game["game_id"]
-        row = {**game, "home_win_prob": None, "away_win_prob": None}
-        if game_id in p:
-            row["home_win_prob"] = p[game_id]["home_win_prob"]
-            row["away_win_prob"] = p[game_id]["away_win_prob"]
-        result.append(row)
+    for event in events:
+        payload = parse_game_data(event)
+        if payload:
+            result.append(payload)
     return result
 
 async def update_games_and_probabilities():
@@ -153,7 +115,7 @@ def stats():
     return {"Home score": "125"}
 
 
-# Live Games Route
+# Live Games Route (from live scoreboard)
 @app.get("/api/games")
 def games():
     """
@@ -168,6 +130,18 @@ def games():
         app_state.games.extend(g)
         app_state.probabilities.update(p)
     return merge_gp(g, p)
+
+
+# Games with full stats (ScoreboardV2)
+@app.get("/api/games/stats")
+def games_stats(game_date: str | None = None):
+    """
+    Returns games with full stats (pts, reb, ast, tov, fg%, ft%, 3pt%, points per quarter).
+    Optional query param: game_date (YYYY-MM-DD). Defaults to today.
+    """
+    results = fetch_games_with_stats(game_date=game_date)
+    return {"results": results}
+
 
 # Standings route
 @app.get("/api/standings")
