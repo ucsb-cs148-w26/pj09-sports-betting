@@ -1,8 +1,10 @@
 "use client";
 
 import GameCard from "./games/GameCard";
+import Standings from "./standings/Standings";
 import { mockGames } from "./games/mock";
 import { useGameData } from "./useGameData";
+
 
 export default function GamesPage() {
   const { games, status, error } = useGameData();
@@ -24,10 +26,7 @@ export default function GamesPage() {
 
           {/* RIGHT: NBA Standings (2/7) */}
           <div className="col-span-2">
-            <div className="rounded-xl border border-zinc-200 bg-white p-6">
-              <h2 className="text-xl font-semibold text-zinc-900">NBA Standings</h2>
-              <div className="mt-4 min-h-[600px] rounded-lg border border-dashed border-zinc-300" />
-            </div>
+             <Standings />
           </div>
         </div>
 
