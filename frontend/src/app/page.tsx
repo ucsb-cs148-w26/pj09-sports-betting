@@ -1,8 +1,10 @@
 "use client";
 
 import GameCard from "./games/GameCard";
+import Standings from "./standings/Standings";
 import { mockGames } from "./games/mock";
 import { useGameData } from "./useGameData";
+
 
 export default function GamesPage() {
   const { games, status, error } = useGameData();
@@ -18,7 +20,7 @@ export default function GamesPage() {
 
         <div className="mt-6 grid grid-cols-6 gap-24">
           {/* LEFT: Game cards (5/7) */}
-          <div className="col-span-4 grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="col-span-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {displayGames.map((game) => (
               <GameCard key={game.game_id} data={game} />
             ))}
@@ -26,10 +28,7 @@ export default function GamesPage() {
 
           {/* RIGHT: NBA Standings (2/7) */}
           <div className="col-span-2">
-            <div className="rounded-xl border border-zinc-200 bg-white p-6">
-              <h2 className="text-xl font-semibold text-zinc-900">NBA Standings</h2>
-              <div className="mt-4 min-h-[600px] rounded-lg border border-dashed border-zinc-300" />
-            </div>
+             <Standings />
           </div>
         </div>
 
