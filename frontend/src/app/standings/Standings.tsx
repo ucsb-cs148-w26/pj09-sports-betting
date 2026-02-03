@@ -30,7 +30,7 @@ export default function Standings() {
     async function fetchStandings() {
       try {
         // Replace with your actual backend endpoint (e.g., 'http://127.0.0.1:8000/standings')
-        const res = await fetch("http://127.0.0.1:8000/api/standings"); 
+        const res = await fetch("https://pj09-sports-betting.onrender.com/api/standings"); 
         const json = await res.json();
         
         // standings.py returns a list containing one dict: [{...}]
