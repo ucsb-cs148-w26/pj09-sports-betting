@@ -100,7 +100,7 @@ All frontend dependencies are listed in `frontend/package.json`.
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/ucsb-cs148-w26/pj09-sports-betting.git
 cd pj09-sports-betting
 ```
 
