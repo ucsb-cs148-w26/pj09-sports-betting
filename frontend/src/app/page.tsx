@@ -3,7 +3,7 @@
 import GameCard from "./games/GameCard";
 import Standings from "./standings/Standings";
 import { mockGames } from "./games/mock";
-import { useGameData } from "./useGameData";
+import { useGameData } from "./GameDataProvider";
 
 
 export default function GamesPage() {
