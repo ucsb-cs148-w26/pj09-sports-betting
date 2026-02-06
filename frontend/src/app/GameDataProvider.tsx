@@ -1,13 +1,29 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import type { Game, ConnectionStatus } from "./types";
 
 const WS_URL = "ws://localhost:8000/ws";
-const RECONNECT_INTERVAL = 5000; // 5 second interval
+const RECONNECT_INTERVAL = 5000;
 const MAX_RECONNECT_ATTEMPTS = 10;
 
-export function useGameData() {
+type GameDataContextValue = {
+  games: Game[];
+  status: ConnectionStatus;
+  error: string | null;
+  reconnect: () => void;
+};
+
+const GameDataContext = createContext<GameDataContextValue | null>(null);
+
+export function GameDataProvider({ children }: { children: React.ReactNode }) {
   const [games, setGames] = useState<Game[]>([]);
   const [status, setStatus] = useState<ConnectionStatus>("connecting");
   const [error, setError] = useState<string | null>(null);
@@ -16,24 +32,20 @@ export function useGameData() {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectAttemptsRef = useRef(0);
 
-  const fetchGames = async () => {
+  // used for initial data population
+  const fetchGames = useCallback(async () => {
     try {
       const res = await fetch("http://localhost:8000/api/games");
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      console.log("Fetched games:", data);
       setGames(Array.isArray(data) ? data : (data?.games ?? []));
     } catch (e) {
       console.error("Fetch games failed:", e);
       setError("Failed to fetch games");
     }
-  };
-
-  useEffect(() => {
-    fetchGames();
   }, []);
 
-  const connect = () => {
+  const connect = useCallback(() => {
     try {
       setStatus("connecting");
       setError(null);
@@ -68,13 +80,8 @@ export function useGameData() {
         console.log("WebSocket disconnected");
         setStatus("disconnected");
 
-        // Attempt to reconnect
         if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
           reconnectAttemptsRef.current += 1;
-          console.log(
-            `Reconnecting... (attempt ${reconnectAttemptsRef.current})`,
-          );
-
           reconnectTimeoutRef.current = setTimeout(() => {
             connect();
           }, RECONNECT_INTERVAL);
@@ -89,17 +96,23 @@ export function useGameData() {
       setStatus("error");
       setError("Failed to create WebSocket connection");
     }
-  };
+  }, []);
 
-  const reconnect = () => {
+  const reconnect = useCallback(() => {
     reconnectAttemptsRef.current = 0;
+    if (wsRef.current) {
+      wsRef.current.close();
+    }
     connect();
-  };
+  }, [connect]);
+
+  useEffect(() => {
+    fetchGames();
+  }, [fetchGames]);
 
   useEffect(() => {
     connect();
 
-    // Cleanup on unmount
     return () => {
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
@@ -108,7 +121,26 @@ export function useGameData() {
         wsRef.current.close();
       }
     };
-  }, []);
+  }, [connect]);
 
-  return { games, status, error, reconnect };
+  const value: GameDataContextValue = {
+    games,
+    status,
+    error,
+    reconnect,
+  };
+
+  return (
+    <GameDataContext.Provider value={value}>
+      {children}
+    </GameDataContext.Provider>
+  );
+}
+
+export function useGameData(): GameDataContextValue {
+  const ctx = useContext(GameDataContext);
+  if (!ctx) {
+    throw new Error("useGameData must be used within GameDataProvider");
+  }
+  return ctx;
 }
