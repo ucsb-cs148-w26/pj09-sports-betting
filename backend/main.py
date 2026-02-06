@@ -26,6 +26,7 @@ def fetch_games_from_nba() -> list[dict[str, Any]]:
     result = []
     for event in events:
         payload = parse_game_data(event)
+        print(f"Payload: {payload}")
         if payload:
             result.append(payload)
     return result
