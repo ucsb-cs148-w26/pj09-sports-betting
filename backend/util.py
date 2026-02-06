@@ -1,5 +1,6 @@
 """
 Computes win probabilities for each game based on the teams' records and the home team's record.
+Uses a trained logistic regression model (ml/model.joblib) when available for in-progress games.
 
 Structured output:
 {
@@ -9,18 +10,98 @@ Structured output:
     }
 }
 """
+from pathlib import Path
 from typing import Any
 import random
+import re
 
-# TODO: Implement actual win probability calculation based on given stats
-def calculate(home_score: int, away_score: int, home_wins: int, home_losses: int, away_wins: int, away_losses: int, status: str) -> tuple[float, float]:
+import pandas as pd
+
+_ML_MODEL_PATH = Path(__file__).resolve().parent.parent / "ml" / "model.joblib"
+_wp_model = None
+
+def _load_wp_model():
+    """Load the win-probability model once; returns None if file missing."""
+    global _wp_model
+    if _wp_model is not None:
+        return _wp_model
+    if not _ML_MODEL_PATH.is_file():
+        return None
+    import joblib
+    _wp_model = joblib.load(_ML_MODEL_PATH)
+    return _wp_model
+
+_SEC_PER_QUARTER = 720
+_SEC_TOTAL_REGULATION = 2880
+_SEC_OT = 300
+
+def parse_status(status: str) -> tuple[int, int]:
+    """
+    Extract (period, seconds_remaining) from status string.
+    Period: 1-4 for quarters, 5=OT, 6=2OT, etc. Seconds: remaining in entire game.
+    """
+    if not status or status == "Final":
+        return 4, 0
+    if status in ("Pregame", "Scheduled"):
+        return 1, _SEC_TOTAL_REGULATION
+    if status == "Halftime":
+        return 2, _SEC_TOTAL_REGULATION // 2  # 1440
+    if status == "Overtime":
+        return 5, _SEC_OT
+
+    # OT: "OT", "2OT", "3OT" — optionally with clock "OT 2:30"
+    ot_match = re.match(r"(\d*)OT\s*(?:(\d{1,2}):(\d{2}))?", status, re.I)
+    if ot_match:
+        ot_num = int(ot_match.group(1) or 1)
+        period = 4 + ot_num
+        if ot_match.group(2) is not None:
+            mins, secs = int(ot_match.group(2)), int(ot_match.group(3) or 0)
+            seconds_left = mins * 60 + secs
+        else:
+            seconds_left = _SEC_OT
+        return period, seconds_left
+
+    # Quarters: "Q1 10:00", "Q2 5:30", "Q3 2:15", "Q4 0:00"
+    q_match = re.match(r"Q([1-4])\s+(\d{1,2}):(\d{2})", status, re.I)
+    if q_match:
+        q = int(q_match.group(1))
+        mins, secs = int(q_match.group(2)), int(q_match.group(3))
+        sec_left_in_q = mins * 60 + secs
+        full_quarters_left = 4 - q
+        seconds_remaining = sec_left_in_q + full_quarters_left * _SEC_PER_QUARTER
+        return q, seconds_remaining
+
+    return None, None
+
+def calculate(
+    home_score: int,
+    away_score: int,
+    status: str,
+) -> tuple[float, float]:
     if status == "Final":
         home_win_prob = 0 if home_score < away_score else 100
         away_win_prob = 100 - home_win_prob
-    else:
-        home_win_prob = int(100 * random.random())
+        return home_win_prob, away_win_prob
+
+    model = _load_wp_model()
+    if model is not None:
+        point_diff = home_score - away_score
+        period, seconds_remaining = parse_status(status)
+        if period is None or seconds_remaining is None:
+            print("Invalid status")
+            return 0, 0
+        FEATURE_COLS = ["PERIOD", "SECONDS_REMAINING", "HOME_SCORE", "AWAY_SCORE", "POINT_DIFF"]
+        X = pd.DataFrame(
+            [[period, seconds_remaining, home_score, away_score, point_diff]],
+            columns=FEATURE_COLS,
+        )
+        proba = model.predict_proba(X)[0]
+        home_win_prob = 100 * proba[1]
         away_win_prob = 100 - home_win_prob
-    return home_win_prob, away_win_prob
+        return home_win_prob, away_win_prob
+
+    print("No model found")
+    return 0, 0
 
 def compute_win_probabilities(games: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
     result = {}
@@ -28,12 +109,13 @@ def compute_win_probabilities(games: list[dict[str, Any]]) -> dict[str, dict[str
         game_id = game["game_id"]
         home_score = game["home_score"]
         away_score = game["away_score"]
-        home_wins = game["home_wins"]
-        home_losses = game["home_losses"]
-        away_wins = game["away_wins"]
-        away_losses = game["away_losses"]
+        # TODO: include team records as features later
+        # home_wins = game["home_wins"]
+        # home_losses = game["home_losses"]
+        # away_wins = game["away_wins"]
+        # away_losses = game["away_losses"]
         status = game["status"]
-        home_win_prob, away_win_prob = calculate(home_score, away_score, home_wins, home_losses, away_wins, away_losses, status)
+        home_win_prob, away_win_prob = calculate(home_score, away_score, status)
         result[game_id] = {
             "home_win_prob": home_win_prob,
             "away_win_prob": away_win_prob
