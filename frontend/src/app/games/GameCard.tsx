@@ -1,6 +1,7 @@
 import { Game } from '../types';
 import abbr from './abbrMap';
 import Image from 'next/image';
+import Link from 'next/link';
 
 function formatProb(n: number | null) {
   if (n === null || Number.isNaN(n)) return "N/A";
@@ -11,7 +12,9 @@ const imgSize = 100;
 
 export default function GameCard({ data }: { data: Game }) {
   return (
-    <div className="border border-gray-300 rounded-lg p-6 bg-white shadow-md hover:shadow-lg transition-shadow">
+    <Link 
+      href={`/games/${data.game_id}`}
+       className="border border-gray-300 rounded-lg p-6 bg-white shadow-md hover:shadow-lg transition-shadow cursor-pointer">
       {/* Status / Time Remaining */}
       <div className="text-center mb-4">
         <p className="text-sm text-gray-500">{data.status}</p>
@@ -71,6 +74,6 @@ export default function GameCard({ data }: { data: Game }) {
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

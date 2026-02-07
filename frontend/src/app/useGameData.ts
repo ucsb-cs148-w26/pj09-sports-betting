@@ -3,7 +3,10 @@
 import { useEffect, useState, useRef } from "react";
 import type { Game, ConnectionStatus } from "./types";
 
-const WS_URL = "wss://pj09-sports-betting.onrender.com/ws";
+
+const BACKEND_URL = "pj09-sports-betting.onrender.com";
+const WS_URL = `wss://${BACKEND_URL}/ws`;
+const API_URL = `https://${BACKEND_URL}/api/games`;
 const RECONNECT_INTERVAL = 5000; // 5 second interval
 const MAX_RECONNECT_ATTEMPTS = 10;
 
@@ -18,7 +21,7 @@ export function useGameData() {
 
   const fetchGames = async () => {
     try {
-      const res = await fetch("https://pj09-sports-betting.onrender.com/api/games");
+      const res = await fetch(API_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       console.log("Fetched games:", data);
