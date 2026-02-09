@@ -21,13 +21,13 @@ export default function GameClient({ id }: { id: string }) {
                 <div className="p-6 sm:p-8">
                     <div className="flex items-center justify-between gap-4 sm:gap-8">
                         <div className="flex-1 text-center">
-                            <Image
+                            {game && <Image
                                 src={`https://a1.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/scoreboard/${game?.away_abbreviation}.png&h=456&w=456`}
                                 alt={`${game?.away_team} logo`}
                                 width={imgSize}
                                 height={imgSize}
                                 className="mx-auto mb-3"
-                            />
+                            />}
                             <div className="text-xs font-bold uppercase tracking-widest text-gray-600">
                                 {game?.away_city}
                             </div>
@@ -94,13 +94,13 @@ export default function GameClient({ id }: { id: string }) {
                         </div>
 
                         <div className="flex-1 text-center">
-                            <Image
+                            {game && <Image
                                 src={`https://a1.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/scoreboard/${game?.home_abbreviation}.png&h=456&w=456`}
                                 alt={`${game?.home_team} logo`}
                                 width={imgSize}
                                 height={imgSize}
                                 className="mx-auto mb-3"
-                            />
+                            />}
                             <div className="text-xs font-bold uppercase tracking-widest text-gray-600">
                                 {game?.home_city}
                             </div>
