@@ -94,7 +94,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "https://pj09-sports-betting.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -167,6 +167,30 @@ def standings():
     data = response.get_dict()
     normalized_standings = normalize_league_standings(data)
     return normalized_standings
+
+# Endpoint for specific game uisng game_id
+@app.get("/api/games/stats/{game_id}")
+def single_game_stats(game_id:str):
+    """
+    Returns normalized stats + win probability for ONE specific game
+    from the in-memory store populated by the poll loop.
+    """
+    g = list(app_state.games)
+    p = dict(app_state.probabilities)
+
+    if not g:
+        g = fetch_games_from_nba()
+        p = compute_win_probabilities(g)
+        app_state.games.extend(g)
+        app_state.probabilities.update(p)
+
+    target = next((game for game in g if game["game_id"] == game_id), None)
+
+    if not target:
+        return {"error": "Invalid game_id"}, 404
+    result = merge_gp([target], p)
+
+    return result[0]
   
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
