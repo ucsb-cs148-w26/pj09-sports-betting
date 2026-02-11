@@ -1,6 +1,12 @@
+Project: Sports Betting/Prediction
 
+Mentor: James, Jonathan
 
-Sprint Planning Meeting
+Meeting Time: Section 02-09-2026
+
+Type of meeting: [Sorint Planning]
+
+Team: Alvin Chan [X], Tim Nguyen [x], Jun Yoon[x], Raymond Xie [X], Ali Shahid [x], Kevin Yang [x], Logan Melgoza [x], Jay Yeung [x]
 
 
 For the next two weeks:
