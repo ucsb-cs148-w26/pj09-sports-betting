@@ -12,12 +12,11 @@ Structured output:
 """
 from pathlib import Path
 from typing import Any
-import random
 import re
 
 import pandas as pd
 
-_ML_MODEL_PATH = Path(__file__).resolve().parent.parent / "ml" / "model.joblib"
+_ML_MODEL_PATH = Path(__file__).resolve().parent.parent / "ml" / "lr_model_l10_s4.joblib"
 _wp_model = None
 
 def _load_wp_model():
@@ -35,52 +34,89 @@ _SEC_PER_QUARTER = 720
 _SEC_TOTAL_REGULATION = 2880
 _SEC_OT = 300
 
-def parse_status(status: str) -> tuple[int, int]:
+def parse_status(status: str) -> tuple[int | None, int | None]:
     """
     Extract (period, seconds_remaining) from status string.
+    Format: "{clock} - {period}" e.g. "40.2 - 4th", "1:23 - 4th", "7:07 - 3rd"
     Period: 1-4 for quarters, 5=OT, 6=2OT, etc. Seconds: remaining in entire game.
     """
-    if not status or status == "Final":
+    if not status or "Final" in status:
         return 4, 0
-    if status in ("Pregame", "Scheduled"):
+    if "Pregame" in status or "Scheduled" in status:
         return 1, _SEC_TOTAL_REGULATION
-    if status == "Halftime":
+    if "Halftime" in status:
         return 2, _SEC_TOTAL_REGULATION // 2  # 1440
-    if status == "Overtime":
+    if "Overtime" in status:
         return 5, _SEC_OT
+    if "End of 1st" in status:
+        return 2, _SEC_PER_QUARTER * 3
+    if "End of 2nd" in status:
+        return 3, _SEC_PER_QUARTER * 2
+    if "End of 3rd" in status:
+        return 4, _SEC_PER_QUARTER
+    if "End of 4th" in status:
+        return 4, 0
 
-    # OT: "OT", "2OT", "3OT" — optionally with clock "OT 2:30"
-    ot_match = re.match(r"(\d*)OT\s*(?:(\d{1,2}):(\d{2}))?", status, re.I)
-    if ot_match:
-        ot_num = int(ot_match.group(1) or 1)
-        period = 4 + ot_num
-        if ot_match.group(2) is not None:
-            mins, secs = int(ot_match.group(2)), int(ot_match.group(3) or 0)
-            seconds_left = mins * 60 + secs
+    match = re.match(r"(.+?)\s*-\s*(.+)", status.strip())
+    if not match:
+        return None, None
+
+    clock_str, period_str = match.group(1).strip(), match.group(2).strip()
+
+    # if game hasn't started yet, return period and seconds remaining for full game
+    if re.search(r"\d{1,2}:\d{2}\s*(AM|PM)?", period_str, re.I):
+        return 1, _SEC_TOTAL_REGULATION
+
+    period_str_lower = period_str.lower()
+    if period_str_lower in ("1st", "1"):
+        period = 1
+    elif period_str_lower in ("2nd", "2"):
+        period = 2
+    elif period_str_lower in ("3rd", "3"):
+        period = 3
+    elif period_str_lower in ("4th", "4"):
+        period = 4
+    else:
+        ot_match = re.match(r"(\d*)ot", period_str_lower)
+        if ot_match:
+            period = 4 + int(ot_match.group(1) or 1)
         else:
-            seconds_left = _SEC_OT
-        return period, seconds_left
+            return None, None
 
-    # Quarters: "Q1 10:00", "Q2 5:30", "Q3 2:15", "Q4 0:00"
-    q_match = re.match(r"Q([1-4])\s+(\d{1,2}):(\d{2})", status, re.I)
-    if q_match:
-        q = int(q_match.group(1))
-        mins, secs = int(q_match.group(2)), int(q_match.group(3))
-        sec_left_in_q = mins * 60 + secs
-        full_quarters_left = 4 - q
+    if ":" in clock_str:
+        parts = clock_str.split(":")
+        try:
+            mins, secs = int(parts[0]), int(float(parts[1]) if parts[1] else 0)
+            sec_left_in_q = mins * 60 + secs
+        except (ValueError, IndexError):
+            return None, None
+    else:
+        try:
+            sec_left_in_q = int(float(clock_str))
+        except ValueError:
+            return None, None
+
+    if period <= 4:
+        full_quarters_left = 4 - period
         seconds_remaining = sec_left_in_q + full_quarters_left * _SEC_PER_QUARTER
-        return q, seconds_remaining
-
-    return None, None
+        return period, seconds_remaining
+    else:
+        return period, sec_left_in_q
 
 def calculate(
     home_score: int,
     away_score: int,
+    home_wins: int,
+    home_losses: int,
+    away_wins: int,
+    away_losses: int,
+    home_l10_wins: int,
+    away_l10_wins: int,
     status: str,
 ) -> tuple[float, float]:
     if status == "Final":
-        home_win_prob = 0 if home_score < away_score else 100
-        away_win_prob = 100 - home_win_prob
+        home_win_prob = 0.0 if home_score < away_score else 100.0
+        away_win_prob = 100.0 - home_win_prob
         return home_win_prob, away_win_prob
 
     model = _load_wp_model()
@@ -90,14 +126,14 @@ def calculate(
         if period is None or seconds_remaining is None:
             print("Invalid status")
             return 0, 0
-        FEATURE_COLS = ["PERIOD", "SECONDS_REMAINING", "HOME_SCORE", "AWAY_SCORE", "POINT_DIFF"]
+        FEATURE_COLS = ["PERIOD", "SECONDS_REMAINING", "HOME_SCORE", "AWAY_SCORE", "POINT_DIFF", "HOME_WINS", "HOME_LOSSES", "AWAY_WINS", "AWAY_LOSSES", "HOME_L10_WINS", "AWAY_L10_WINS"]
         X = pd.DataFrame(
-            [[period, seconds_remaining, home_score, away_score, point_diff]],
+            [[period, seconds_remaining, home_score, away_score, point_diff, home_wins, home_losses, away_wins, away_losses, home_l10_wins, away_l10_wins]],
             columns=FEATURE_COLS,
         )
         proba = model.predict_proba(X)[0]
-        home_win_prob = 100 * proba[1]
-        away_win_prob = 100 - home_win_prob
+        home_win_prob = float(100 * proba[1])
+        away_win_prob = float(100 - home_win_prob)
         return home_win_prob, away_win_prob
 
     print("No model found")
@@ -109,16 +145,23 @@ def compute_win_probabilities(games: list[dict[str, Any]]) -> dict[str, dict[str
         game_id = game["game_id"]
         home_score = game["home_score"]
         away_score = game["away_score"]
-        # TODO: include team records as features later
-        # home_wins = game["home_wins"]
-        # home_losses = game["home_losses"]
-        # away_wins = game["away_wins"]
-        # away_losses = game["away_losses"]
         status = game["status"]
-        home_win_prob, away_win_prob = calculate(home_score, away_score, status)
+        home_wins = game["home_wins"]
+        home_losses = game["home_losses"]
+        away_wins = game["away_wins"]
+        away_losses = game["away_losses"]
+        home_l10_wins = game.get("home_l10_wins", 0)
+        away_l10_wins = game.get("away_l10_wins", 0)
+
+        home_win_prob, away_win_prob = calculate(
+            home_score, away_score,
+            home_wins, home_losses, away_wins, away_losses,
+            home_l10_wins, away_l10_wins,
+            status,
+        )
         result[game_id] = {
-            "home_win_prob": home_win_prob,
-            "away_win_prob": away_win_prob
+            "home_win_prob": float(home_win_prob),
+            "away_win_prob": float(away_win_prob),
         }
     return result
 
