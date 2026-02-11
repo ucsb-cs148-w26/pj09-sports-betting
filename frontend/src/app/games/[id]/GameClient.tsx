@@ -4,6 +4,8 @@ import Image from "next/image";
 import { Game } from '@/app/types';
 import { useGameData } from '@/app/useGameData';
 import { mockGames } from '../mock';
+import WinProbChart from './WinProbChart';
+import { mockWinProbData } from './mockWinProb';
 
 export default function GameClient({ id }: { id: string }) {
     const imgSize = 150;
@@ -194,9 +196,12 @@ export default function GameClient({ id }: { id: string }) {
                     </div>
                 </div>
 
-                <div className="mt-8 p-6 rounded-lg text-center">
-                    <h1 className="text-xl font-bold text-gray-900">Graph here later</h1>
-                </div>
+                {/* Win Probability Graph */}
+                <WinProbChart
+                    data={mockWinProbData}
+                    homeTeam={game?.home_team ?? "Home"}
+                    awayTeam={game?.away_team ?? "Away"}
+                />
                 <div className="mt-6 text-sm text-gray-500">
                     {error ? ` • ${error}` : null}
                 </div>
