@@ -16,7 +16,7 @@ import re
 
 import pandas as pd
 
-_ML_MODEL_PATH = Path(__file__).resolve().parent.parent / "ml" / "lr_model_l10_s4.joblib"
+_ML_MODEL_PATH = Path(__file__).resolve().parent.parent / "ml" / "xgboost_calibrated.joblib"
 _wp_model = None
 
 def _load_wp_model():
@@ -121,14 +121,13 @@ def calculate(
 
     model = _load_wp_model()
     if model is not None:
-        point_diff = home_score - away_score
-        period, seconds_remaining = parse_status(status)
-        if period is None or seconds_remaining is None:
+        _, seconds_remaining = parse_status(status)
+        if seconds_remaining is None:
             print("Invalid status")
             return 0, 0
-        FEATURE_COLS = ["PERIOD", "SECONDS_REMAINING", "HOME_SCORE", "AWAY_SCORE", "POINT_DIFF", "HOME_WINS", "HOME_LOSSES", "AWAY_WINS", "AWAY_LOSSES", "HOME_L10_WINS", "AWAY_L10_WINS"]
+        FEATURE_COLS = ["SECONDS_REMAINING", "HOME_SCORE", "AWAY_SCORE", "HOME_WINS", "HOME_LOSSES", "AWAY_WINS", "AWAY_LOSSES", "HOME_L10_WINS", "AWAY_L10_WINS"]
         X = pd.DataFrame(
-            [[period, seconds_remaining, home_score, away_score, point_diff, home_wins, home_losses, away_wins, away_losses, home_l10_wins, away_l10_wins]],
+            [[seconds_remaining, home_score, away_score, home_wins, home_losses, away_wins, away_losses, home_l10_wins, away_l10_wins]],
             columns=FEATURE_COLS,
         )
         proba = model.predict_proba(X)[0]

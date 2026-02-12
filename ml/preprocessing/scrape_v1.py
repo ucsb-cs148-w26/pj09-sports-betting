@@ -75,6 +75,8 @@ def build_training_table(
     away_l10: tuple[int, int],
 ) -> pd.DataFrame:
     url = f"https://cdn.nba.com/static/json/liveData/playbyplay/playbyplay_{game_id}.json"
+    print(url)
+    exit()
     data = requests.get(url, headers=HEADERS, timeout=20).json()
     print(data)
     
