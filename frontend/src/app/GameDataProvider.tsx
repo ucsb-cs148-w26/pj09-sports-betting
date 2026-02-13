@@ -10,8 +10,10 @@ import {
 } from "react";
 import type { Game, ConnectionStatus } from "./types";
 
-const WS_URL = "ws://localhost:8000/ws";
-const RECONNECT_INTERVAL = 5000;
+const BACKEND_URL = "pj09-sports-betting.onrender.com";
+const WS_URL = `wss://${BACKEND_URL}/ws`;
+const API_URL = `https://${BACKEND_URL}/api/games`;
+const RECONNECT_INTERVAL = 5000; // 5 second interval
 const MAX_RECONNECT_ATTEMPTS = 10;
 
 type GameDataContextValue = {
@@ -35,7 +37,7 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
   // used for initial data population
   const fetchGames = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/games");
+      const res = await fetch(API_URL);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       setGames(Array.isArray(data) ? data : (data?.games ?? []));

@@ -23,6 +23,7 @@ export default function GamesPage() {
           <div className="col-span-4 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {displayGames.map((game) => (
               <GameCard key={game.game_id} data={game} />
+              
             ))}
           </div>
 
