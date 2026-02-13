@@ -73,10 +73,12 @@ model_map = {
     "lr": "Logistic Regression",
     "xgboost": "XGBoost",
     "xgboost_calibrated": "XGBoost Calibrated",
-    "random_forest_v1": "Random Forest"
+    "random_forest_v1": "Random Forest",
+    "nn": "Neural Network"
 }
 
-url = "https://cdn.nba.com/static/json/liveData/playbyplay/playbyplay_0022400063.json"
+# pistons pacers oct 23 2024
+url = "https://cdn.nba.com/static/json/liveData/playbyplay/playbyplay_0022500788.json"
 data = requests.get(url).json()
 pbp = data["game"]["actions"]
 model = joblib.load(f"../ml/{model_name}.joblib")
@@ -110,9 +112,13 @@ for action in pbp:
         [[seconds_remaining, home_score, away_score, home_wins, home_losses, away_wins, away_losses, home_l10_wins, away_l10_wins]],
         columns=FEATURE_COLS,
     )
-    y_proba = model.predict_proba(X)
+    if hasattr(model, "predict_proba"):
+        y_proba = model.predict_proba(X)
+        home_p = y_proba[0, 1]
+    else:
+        home_p = float(model.predict(X, verbose=0).ravel()[0])
     times_sec.append(elapsed)
-    home_wps.append(round(y_proba[0, 1] * 100, 2))  
+    home_wps.append(round(home_p * 100, 2))  
     prev_elapsed = elapsed
 
 X_Y_Spline = make_interp_spline(times_sec, home_wps)

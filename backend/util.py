@@ -16,7 +16,7 @@ import re
 
 import pandas as pd
 
-_ML_MODEL_PATH = Path(__file__).resolve().parent.parent / "ml" / "xgboost_calibrated.joblib"
+_ML_MODEL_PATH = Path(__file__).resolve().parent.parent / "ml" / "nn.joblib"
 _wp_model = None
 
 def _load_wp_model():
@@ -130,7 +130,14 @@ def calculate(
             [[seconds_remaining, home_score, away_score, home_wins, home_losses, away_wins, away_losses, home_l10_wins, away_l10_wins]],
             columns=FEATURE_COLS,
         )
-        proba = model.predict_proba(X)[0]
+
+        # for xgboost, xgboost_calibrated, random_forest, lr
+        if hasattr(model, "predict_proba"):
+            proba = model.predict_proba(X)[0]
+        # neural network
+        else:
+            p = float(model.predict(X, verbose=0).ravel()[0])
+            proba = (1 - p, p)
         home_win_prob = float(100 * proba[1])
         away_win_prob = float(100 - home_win_prob)
         return home_win_prob, away_win_prob
