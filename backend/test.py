@@ -118,7 +118,7 @@ for action in pbp:
     else:
         home_p = float(model.predict(X, verbose=0).ravel()[0])
     times_sec.append(elapsed)
-    home_wps.append(round(home_p * 100, 2))  
+    home_wps.append(100 - round(home_p * 100, 2))  
     prev_elapsed = elapsed
 
 X_Y_Spline = make_interp_spline(times_sec, home_wps)
