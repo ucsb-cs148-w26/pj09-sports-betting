@@ -73,11 +73,7 @@ def parse_status(status: str) -> tuple[int, int]:
 
     return None, None
 
-def calculate(
-    home_score: int,
-    away_score: int,
-    status: str,
-) -> tuple[float, float]:
+def calculate( home_score: int, away_score: int, status: str ) -> tuple[float, float]:
     if status == "Final":
         home_win_prob = 0 if home_score < away_score else 100
         away_win_prob = 100 - home_win_prob
