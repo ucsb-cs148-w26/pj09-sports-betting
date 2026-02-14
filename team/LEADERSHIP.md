@@ -13,3 +13,4 @@
 | Fri 2/6   | Raymond Xie   | Led Daily Scrum                       |
 | Mon 2/9   | Ali Shahid    | Led Daily Scrum                       |
 | Wed 2/11  | Kevin Yang    | Led Daily Scrum                       |
+| Fri 2/13  | Jun Yoon      | Led Retro                             |
