@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Game } from '@/app/types';
-import { useGameData } from '@/app/useGameData';
+import { useGameData } from '@/app/GameDataProvider';
 import { mockGames } from '../mock';
 
 export default function GameClient({ id }: { id: string }) {
