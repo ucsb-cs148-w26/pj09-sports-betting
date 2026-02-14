@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
       <nav className="absolute top-0 left-0 right-0 p-4 bg-blue-900/75 backdrop-blur-md">
         <div className="w-1/3">

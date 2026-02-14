@@ -1,5 +1,4 @@
 import { Game } from '../types';
-import abbr from './abbrMap';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -26,7 +25,7 @@ export default function GameCard({ data }: { data: Game }) {
         <div className="flex-1 text-center">
           <div className="flex-1 justify-center mb-2">
             <Image
-              src={`https://a1.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/scoreboard/${abbr[data.home_team]}.png&h=456&w=456`}
+              src={`https://a1.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/scoreboard/${data.home_abbreviation}.png&h=456&w=456`}
               alt={`${data.home_team} logo`}
               width={imgSize}
               height={imgSize}
@@ -48,7 +47,7 @@ export default function GameCard({ data }: { data: Game }) {
         {/* Team 2 */}
         <div className="flex-1 text-center">
             <Image
-              src={`https://a1.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/scoreboard/${abbr[data.away_team]}.png&h=456&w=456`}
+              src={`https://a1.espncdn.com/combiner/i?img=/i/teamlogos/nba/500/scoreboard/${data.away_abbreviation}.png&h=456&w=456`}
               alt={`${data.away_team} logo`}
               width={imgSize}
               height={imgSize}

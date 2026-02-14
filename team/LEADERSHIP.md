@@ -9,3 +9,8 @@
 | Fri 1/23  | Tim Nguyen    | Led the first retrospective           |
 | Mon 1/26  | Tim Nguyen    | Led Daily Scrum                       |
 | Wed 1/28  | Jay Yeung     | Led Daily Scrum                       |
+| Mon 2/2   | Alvin Chan    | Sprint Planning                       |
+| Fri 2/6   | Raymond Xie   | Led Daily Scrum                       |
+| Mon 2/9   | Ali Shahid    | Led Daily Scrum                       |
+| Wed 2/11  | Kevin Yang    | Led Daily Scrum                       |
+| Fri 2/13  | Jun Yoon      | Led Retro                             |
