@@ -114,7 +114,14 @@ def calculate(
     away_l10_wins: int,
     status: str,
 ) -> tuple[float, float]:
-    if status == "Final":
+    # Check if game hasn't started yet - use pregame defaults
+    if "EST" in status or "ET" in status or status in ("Pregame", "Scheduled"):
+        home_score = 0
+        away_score = 0
+        period = 1
+        seconds_remaining = 48 * 60  # 48 minutes = 2880 seconds
+        point_diff = 0
+    elif status == "Final":
         home_win_prob = 0.0 if home_score < away_score else 100.0
         away_win_prob = 100.0 - home_win_prob
         return home_win_prob, away_win_prob
@@ -143,7 +150,7 @@ def calculate(
         return home_win_prob, away_win_prob
 
     print("No model found")
-    return 0, 0
+    return 50.0, 50.0  # Only fallback when model is completely missing
 
 def compute_win_probabilities(games: list[dict[str, Any]]) -> dict[str, dict[str, float]]:
     result = {}
@@ -311,3 +318,65 @@ def merge_gp(g: list[dict[str, Any]], p: dict[str, dict[str, float]]) -> list[di
             row["away_win_prob"] = p[game_id]["away_win_prob"]
         result.append(row)
     return result
+
+
+def parse_dashboard_game_data(event: dict[str, Any]) -> dict[str, Any] | None:
+    """
+    Parse lightweight game data for dashboard display.
+    Returns only: game_id, status, team names, abbreviations, records, scores.
+    This is a minimal subset compared to parse_game_data().
+    """
+    comps = event.get("competitions") or []
+    if not comps:
+        return None
+    comp = comps[0]
+    competitors = comp.get("competitors") or []
+    home = next((c for c in competitors if c.get("homeAway") == "home"), None)
+    away = next((c for c in competitors if c.get("homeAway") == "away"), None)
+    if not home or not away:
+        return None
+
+    status_obj = comp.get("status") or {}
+    status = status_obj.get("type", {}).get("shortDetail") or status_obj.get("type", {}).get("description") or ""
+
+    def _parse_records(records: list) -> tuple[int, int]:
+        rec = next((r for r in (records or []) if r.get("name") == "overall" or r.get("type") == "total"), None)
+        summary = (rec or {}).get("summary", "") or ""
+        parts = summary.split("-")
+        if len(parts) != 2:
+            return 0, 0
+        try:
+            return int(parts[0].strip()), int(parts[1].strip())
+        except ValueError:
+            return 0, 0
+
+    def _team_dashboard(c: dict) -> dict:
+        t = c.get("team") or {}
+        wins, losses = _parse_records(c.get("records"))
+        return {
+            "team_name": t.get("shortDisplayName") or t.get("name", ""),
+            "city": t.get("location", ""),
+            "abbreviation": t.get("abbreviation", ""),
+            "wins": wins,
+            "losses": losses,
+            "score": int(c.get("score", 0) or 0),
+        }
+
+    h, a = _team_dashboard(home), _team_dashboard(away)
+
+    return {
+        "game_id": event.get("id", ""),
+        "status": status,
+        "home_team": h["team_name"],
+        "home_city": h["city"],
+        "home_abbreviation": h["abbreviation"],
+        "home_wins": h["wins"],
+        "home_losses": h["losses"],
+        "home_score": h["score"],
+        "away_team": a["team_name"],
+        "away_city": a["city"],
+        "away_abbreviation": a["abbreviation"],
+        "away_wins": a["wins"],
+        "away_losses": a["losses"],
+        "away_score": a["score"],
+    }

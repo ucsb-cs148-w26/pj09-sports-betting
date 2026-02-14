@@ -1,0 +1,158 @@
+///<reference types="jest" />
+
+import { render, screen, waitFor, act } from "@testing-library/react";
+import { useGameData } from "../src/app/useGameData";
+
+// Minimal test component that uses the hook
+function TestComponent() {
+  const { games, status, error } = useGameData();
+  return (
+    <div>
+      <div data-testid="status">{status}</div>
+      <div data-testid="games">{JSON.stringify(games)}</div>
+      <div data-testid="error">{error ?? ""}</div>
+    </div>
+  );
+}
+
+// Mock WebSocket implementation that allows tests to drive events
+class MockWebSocket {
+  static instances: MockWebSocket[] = [];
+  onopen: (() => void) | null = null;
+  onmessage: ((ev: { data: string }) => void) | null = null;
+  onerror: ((ev: any) => void) | null = null;
+  onclose: (() => void) | null = null;
+  url: string;
+
+  constructor(url: string) {
+    this.url = url;
+    MockWebSocket.instances.push(this);
+    // simulate immediate open on next tick
+    setTimeout(() => {
+      this.onopen && this.onopen();
+    }, 0);
+  }
+
+  send() {
+    // no-op
+  }
+
+  close() {
+    this.onclose && this.onclose();
+  }
+}
+
+    // WebSocket that does NOT call onopen (so it won't clear the fetch error)
+    class NoOpenMockWebSocket {
+      static instances: NoOpenMockWebSocket[] = [];
+      onopen: (() => void) | null = null;
+      onmessage: ((ev: { data: string }) => void) | null = null;
+      onerror: ((ev: any) => void) | null = null;
+      onclose: (() => void) | null = null;
+      url: string;
+      constructor(url: string) {
+        this.url = url;
+        NoOpenMockWebSocket.instances.push(this);
+        // do NOT call onopen here
+      }
+      send() {}
+      close() {}
+    }
+
+
+describe("useGameData hook", () => {
+  const initialGames = [{ game_id: "g1", status: "Final" }];
+  const wsGames = [{ game_id: "g1", status: "Updated" }];
+
+  beforeEach(() => {
+    // mock fetch
+    (global as any).fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => initialGames,
+    });
+
+    // mock WebSocket
+    (global as any).WebSocket = MockWebSocket as any;
+
+    // clear instances
+    MockWebSocket.instances = [];
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+    MockWebSocket.instances = [];
+    delete (global as any).WebSocket;
+    delete (global as any).fetch;
+  });
+
+  // TEST 1: Verify hook fetches initial data and updates on websocket message
+  it("fetches initial games and updates from websocket", async () => {
+    render(<TestComponent />);
+
+    // wait for fetch to resolve and initial render
+    await waitFor(() => {
+      expect(screen.getByTestId("games").textContent).toContain("g1");
+    });
+
+    // ensure websocket instance was created and opened
+    expect(MockWebSocket.instances.length).toBeGreaterThan(0);
+    const ws = MockWebSocket.instances[0];
+
+    // simulate incoming websocket message
+    act(() => {
+      ws.onmessage && ws.onmessage({ data: JSON.stringify(wsGames) });
+    });
+
+    // verify hook updated games from websocket
+    await waitFor(() => {
+      expect(screen.getByTestId("games").textContent).toContain("Updated");
+    });
+  });
+
+  // TEST 2: Verify hook handles fetch error
+  it("handles websocket error by setting status/error", async () => {
+    // fetch returns initial data
+    (global as any).fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => [{ game_id: "g1", status: "Final" }],
+    });
+    (global as any).WebSocket = MockWebSocket as any;
+    render(<TestComponent />);
+
+    // wait for initial fetch to settle and mock ws to be created
+    await waitFor(() => {
+      expect(MockWebSocket.instances.length).toBeGreaterThan(0);
+    });
+    const ws = MockWebSocket.instances[0];
+
+    // simulate a websocket error
+    act(() => {
+      ws.onerror && ws.onerror({} as any);
+    });
+
+    // assert hook updated status and error
+    await waitFor(() => {
+      expect(screen.getByTestId("status").textContent).toBe("error");
+      expect(screen.getByTestId("error").textContent).toContain(
+        "WebSocket connection error",
+      );
+    });
+  });
+
+  it("reports fetch failure", async () => {
+    // simulate non-OK response
+    (global as any).fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      status: 500,
+    });
+
+    (global as any).WebSocket = NoOpenMockWebSocket as any;
+    render(<TestComponent />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("error").textContent).toContain(
+        "Failed to fetch games",
+      );
+    });
+  });
+});
