@@ -291,6 +291,43 @@ export default function WinProbabilityGraph({
                 {game.away_team} vs {game.home_team}
             </p>
 
+            <div className="mb-5 border-b border-gray-200 dark:border-zinc-800 pb-4">
+                <div className="flex items-center justify-between gap-4">
+                    <div className="min-w-0">
+                        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-zinc-400">
+                            {game.away_abbreviation}
+                        </div>
+                        <div className="truncate text-sm font-medium text-gray-700 dark:text-zinc-200">
+                            {game.away_team}
+                        </div>
+                        <div className={`text-3xl font-black leading-none ${!homeFavored ? 'text-red-500 dark:text-red-400' : 'text-gray-900 dark:text-zinc-100'}`}>
+                            {awayProb.toFixed(1)}%
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col items-center justify-center px-3 text-center">
+                        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400 dark:text-zinc-500">
+                            Model Projection
+                        </div>
+                        <div className="mt-1 text-sm font-semibold text-gray-700 dark:text-zinc-200">
+                            {Math.abs(homeProb - awayProb).toFixed(1)} pt edge
+                        </div>
+                    </div>
+
+                    <div className="min-w-0 text-right">
+                        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-zinc-400">
+                            {game.home_abbreviation}
+                        </div>
+                        <div className="truncate text-sm font-medium text-gray-700 dark:text-zinc-200">
+                            {game.home_team}
+                        </div>
+                        <div className={`text-3xl font-black leading-none ${homeFavored ? 'text-green-600 dark:text-emerald-400' : 'text-gray-900 dark:text-zinc-100'}`}>
+                            {homeProb.toFixed(1)}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Chart */}
             <div className="w-full h-72 sm:h-80">
                 <ResponsiveContainer width="100%" height="100%">
@@ -408,55 +445,6 @@ export default function WinProbabilityGraph({
                         />
                     </AreaChart>
                 </ResponsiveContainer>
-            </div>
-
-            {/* Legend + current probability cards */}
-            <div className="grid grid-cols-2 gap-4 mt-6">
-                <div
-                    className={`rounded-xl border p-4 text-center transition-all ${
-                        !homeFavored
-                            ? 'border-green-200 dark:border-emerald-700 bg-green-50 dark:bg-emerald-900/30'
-                            : 'border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800'
-                    }`}
-                >
-                    <div className="flex items-center justify-center gap-1.5 mb-1">
-                        <span className="inline-block h-2.5 w-2.5 rounded-full bg-red-500" />
-                        <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-400">
-                            {game.away_team}
-                        </span>
-                    </div>
-                    <div
-                        className={`text-3xl font-black ${!homeFavored ? 'text-green-600 dark:text-emerald-400' : 'text-gray-700 dark:text-zinc-200'}`}
-                    >
-                        {awayProb.toFixed(1)}%
-                    </div>
-                    <div className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
-                        {!homeFavored ? 'Favored' : 'Underdog'}
-                    </div>
-                </div>
-
-                <div
-                    className={`rounded-xl border p-4 text-center transition-all ${
-                        homeFavored
-                            ? 'border-green-200 dark:border-emerald-700 bg-green-50 dark:bg-emerald-900/30'
-                            : 'border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800'
-                    }`}
-                >
-                    <div className="flex items-center justify-center gap-1.5 mb-1">
-                        <span className="inline-block h-2.5 w-2.5 rounded-full bg-green-600" />
-                        <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-400">
-                            {game.home_team}
-                        </span>
-                    </div>
-                    <div
-                        className={`text-3xl font-black ${homeFavored ? 'text-green-600 dark:text-emerald-400' : 'text-gray-700 dark:text-zinc-200'}`}
-                    >
-                        {homeProb.toFixed(1)}%
-                    </div>
-                    <div className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
-                        {homeFavored ? 'Favored' : 'Underdog'}
-                    </div>
-                </div>
             </div>
         </div>
     );
