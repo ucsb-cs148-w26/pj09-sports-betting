@@ -12,10 +12,10 @@ export function classifyGameStatus(status: string | undefined): GamePhase {
     return "pregame";
   }
 
-  if (
-    /\b(am|pm)\b/.test(s) &&
-    (s.includes("et") || s.includes("est") || s.includes("pt") || s.includes("ct"))
-  ) {
+  const hasScheduledTime = /\b(am|pm)\b/.test(s);
+  const hasUsTimezone = /\b(?:[ecmp](?:s|d)?t)\b/.test(s);
+
+  if (hasScheduledTime && hasUsTimezone) {
     return "pregame";
   }
 
