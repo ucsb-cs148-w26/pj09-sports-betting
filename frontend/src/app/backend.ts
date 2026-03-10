@@ -1,4 +1,5 @@
-const DEFAULT_BACKEND = "https://pj09-sports-betting.onrender.com";
+const DEFAULT_BACKEND = "http://localhost:8000";
+// const DEFAULT_BACKEND = "https://pj09-sports-betting.onrender.com";
 
 function normalizeBackendBase(raw: string | undefined): string {
   const value = raw?.trim();

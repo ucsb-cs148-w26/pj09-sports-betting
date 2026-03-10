@@ -19,6 +19,7 @@ from util import (
 )
 import state as app_state
 from datetime import date as date_type, datetime
+from zoneinfo import ZoneInfo
 from database import (
     fetch_game_history,
     save_completed_games_to_db,
@@ -37,7 +38,8 @@ async def update_games_and_probabilities():
     Update the games and probabilities in the in-memory store and broadcast to WebSocket clients.
     Uses lightweight dashboard data for efficiency.
     """
-    games = fetch_dashboard_games()
+    today = _today_isoformat_la()
+    games = fetch_dashboard_games(game_date=today)
     probabilities = compute_win_probabilities(games)
     app_state.GAMES_STATE.clear()
     app_state.GAMES_STATE.extend(games)
@@ -334,7 +336,8 @@ def games():
     # If in-memory store is empty (e.g., on first request), fetch fresh data
     if not g:
         try:
-            g = fetch_dashboard_games()
+            today = _today_isoformat_la()
+            g = fetch_dashboard_games(game_date=today)
             p = compute_win_probabilities(g)
             app_state.GAMES_STATE.extend(g)
             app_state.PROBABILITIES_STATE.update(p)
@@ -347,6 +350,11 @@ def games():
         return []
     
     return merge_gp(g, p)
+
+def _today_isoformat_la() -> str:
+    """Today's date in America/Los_Angeles, YYYY-MM-DD (matches games_by_date format)."""
+    return datetime.now(ZoneInfo("America/Los_Angeles")).date().isoformat()
+
 
 def _parse_date_param(value: str) -> date_type | None:
     """Parse date path param; accept YYYY-MM-DD or YYYYMMDD. Returns date or None."""
@@ -373,7 +381,8 @@ async def games_by_date(date: str):
         if parsed is None:
             return []
         date_yyyy_mm_dd = parsed.isoformat()
-        use_espn = parsed >= date_type.today()
+        today_la = datetime.now(ZoneInfo("America/Los_Angeles")).date()
+        use_espn = parsed >= today_la
 
         if use_espn:
             g = fetch_dashboard_games(game_date=date_yyyy_mm_dd)
@@ -381,8 +390,14 @@ async def games_by_date(date: str):
             return merge_gp(g, p)
         else:
             days = await fetch_game_history(order="asc", date=date_yyyy_mm_dd)
+
             if not days or not days[0].get("games"):
-                return []
+                g = fetch_dashboard_games(game_date=date_yyyy_mm_dd)
+                if not g:
+                    return []
+                p = compute_win_probabilities(g)
+                return merge_gp(g, p)
+                
             rows = days[0]["games"]
             g = [past_game_row_to_dashboard_game(row) for row in rows]
             p = {
