@@ -2,16 +2,16 @@
 
 ```mermaid
 flowchart TB
-    U[User Browser]
-    FE[Next.js Frontend<br/>Games / Game Details / Props / Info]
-    BE[FastAPI Backend]
-    WS[WebSocket /ws Topics<br/>games, game:{id}, props]
-    MEM[In-Memory App State<br/>games, probs, history, props snapshot]
-    DB[(PostgreSQL<br/>past_game_info, past_game_stats,<br/>game_probability_history)]
-    ESPN[ESPN APIs<br/>scoreboard, summary, standings, roster]
-    NBA[nba_api<br/>season/player tables]
-    ODDS[SportsGameOdds API<br/>player prop odds]
-    MODELS[Local Models<br/>wp_lr.joblib, pts/reb/ast joblib]
+    U["User Browser"]
+    FE["Next.js Frontend<br/>Games / Game Details / Props / Info"]
+    BE["FastAPI Backend"]
+    WS["WebSocket /ws Topics<br/>games, game:[id], props"]
+    MEM["In-Memory App State<br/>games, probs, history, props snapshot"]
+    DB[("PostgreSQL<br/>past_game_info, past_game_stats,<br/>game_probability_history")]
+    ESPN["ESPN APIs<br/>scoreboard, summary, standings, roster"]
+    NBA["nba_api<br/>season/player tables"]
+    ODDS["SportsGameOdds API<br/>player prop odds"]
+    MODELS["Local Models<br/>wp_lr.joblib, pts/reb/ast joblib"]
 
     U --> FE
     FE -->|HTTP REST| BE
