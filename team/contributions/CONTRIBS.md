@@ -102,8 +102,10 @@ Throughout the quart I worked on mutliple issues and features. Most issues were 
 Many of the backend changes I made are meant to support major user flows. The backend endpoints that I created were the fountation for both the live games and standings on the main games dashboard. Redesigning the websocket also allows users to get live game updates on the games dashboard, individual games page, and pplayer props page. Lastly, my work in creating data piplines and scripts allowed us to train and use our ML models for actual user features such as the live game probabilites and player props. This included an entire end to end pipeline that took live game, projected their players PRA, and rendered them on the frontend.
 
 # Contributions - Raymond
+
 Throughout the quarter my primary focus was backend development for the application. I worked on building and improving the backend infrastructure that powers the live game dashboard and player props features. This included developing API endpoints, implementing real-time data streaming using WebSockets, designing database structures, and integrating external sports data sources. A lot of work was also done on pair programming issues with other members. 
 ## Coding Contributions
+
 Throughout the quart I worked on mutliple issues and features. Most issues were backend related with some frontend changes. They include:
 - Refactor Starting Lineup Endpoint to Support ESPN PR: [170](https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/127)
 - Implement per-game WebSocket broadcaster for detailed game stats PR: [142](https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/161)
@@ -115,6 +117,8 @@ Throughout the quart I worked on mutliple issues and features. Most issues were 
 - Setup FastAPI app  PR: [56](https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/67)
 - Add player images to props  PR: [82](https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/199)
 - Create player props endpoint + web sockets PR: [194](https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/198)
+- Added help/info page PR: [212 and 214](https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/212)
+- Added advance props search PR: [205](https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/205)
 
 # Contributions - Tim
 
