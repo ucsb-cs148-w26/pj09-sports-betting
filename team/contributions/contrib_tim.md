@@ -20,3 +20,4 @@ I contributed primarily to frontend development and real-time data integration f
 - Fixed **game fetching in the production environment**, updating frontend API endpoints to correctly retrieve deployed backend data.  
   PRs: https://github.com/ucsb-cs148-w26/pj09-sports-betting/issues/116
   
+- **Overhauled the win probability graph** to remove all frontend estimation logic and instead display only backend ML-produced probabilities, enhanced the tooltip with team names, score differential, probability shifts, and formatted time remaining, and redesigned the summary UI with a modern header strip.                                                                                                                          PRs: https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/210
