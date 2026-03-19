@@ -10,4 +10,8 @@ Throughout the quarter I mostly worked on backend development including defining
 
 - Fixing endpoint for last 10 games record: https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/165
 
-- Training models: https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/184, https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/136, https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/119
+- Training models: https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/184, https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/136, https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/119, https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/219
+
+- Frontend feature improvements: https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/225, https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/216
+
+- Store historical games in DB: https://github.com/ucsb-cs148-w26/pj09-sports-betting/pull/204
